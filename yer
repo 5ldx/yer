@@ -1,5 +1,4 @@
 local FOV = 90
-local MAX_DISTANCE = 500 -- Maximum distance in studs for locking
 local RUN_SERVICE = game:GetService("RunService")
 local USER_INPUT_SERVICE = game:GetService("UserInputService")
 local PLAYERS = game:GetService("Players")
@@ -32,18 +31,14 @@ local function getClosestPlayerInFOV(targetPartName)
     for _, player in ipairs(PLAYERS:GetPlayers()) do
         if player ~= PLAYERS.LocalPlayer and player.Character then
             local targetPart = player.Character:FindFirstChild(targetPartName)
-            local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
 
-            if targetPart and rootPart then
-                local distanceToPlayer = (rootPart.Position - PLAYERS.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-                if distanceToPlayer <= MAX_DISTANCE then
-                    local screenPosition, isVisible = CAMERA:WorldToViewportPoint(targetPart.Position)
-                    local distance = (Vector2.new(screenPosition.x, screenPosition.y) - playerMousePos).Magnitude
+            if targetPart then
+                local screenPosition, isVisible = CAMERA:WorldToViewportPoint(targetPart.Position)
+                local distance = (Vector2.new(screenPosition.x, screenPosition.y) - playerMousePos).Magnitude
 
-                    if distance < closestDistance and isVisible and distance < FOV then
-                        closestDistance = distance
-                        nearestPlayer = player
-                    end
+                if distance < closestDistance and isVisible and distance < FOV then
+                    closestDistance = distance
+                    nearestPlayer = player
                 end
             end
         end
